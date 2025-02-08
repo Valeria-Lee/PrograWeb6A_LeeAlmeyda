@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     $fila = $data->fila;
     $columna = $data->columna;
-
+    
     session_start();
     $tablero = $_SESSION['tablero'];
 

@@ -45,6 +45,37 @@
     </select>
     <div id="tablero"></div>
     <script>
+        function desbloquearMinas(t) {
+            const tableroFinal = t.table
+            console.log("data:", tableroFinal)
+            const minasPos = t.minasPos
+
+            minasPos.forEach(mina => {
+                const minaFila = mina.fila
+                const minaColumna = mina.col
+
+                console.log(tableroFinal.length)
+
+                // se calcula el indice con la fila por el numero de columnas totales, se le suma la columna y un 1
+                const indice = minaFila * tableroFinal.length + minaColumna + 1
+                console.log("indice:", indice)
+
+                // se encuentra el elemento html en base al indice
+                const minaCelda = document.querySelector(`#tablero > div:nth-child(${indice})`)
+
+                // se verifica que no sea nulo o invalido
+                if (document.querySelector(`#tablero > div:nth-child(${indice})`) != NaN) {
+                    const minaCelda = document.querySelector(`#tablero > div:nth-child(${indice})`)
+                    if (minaCelda) {
+                        minaCelda.textContent = '💣';
+                        minaCelda.classList.add('revelada');
+                    }
+                }
+        });
+
+        alert("Has explotao' 💥")
+    }
+
         function generarTablero(filas, columnas) {
             var tablero = document.getElementById("tablero")
 
@@ -83,6 +114,8 @@
                             } else {
                                 spanNumero.textContent = '💣'
                                 e.target.appendChild(spanNumero)
+                                console.log("explotao'")
+                                desbloquearMinas(table)
                             }
                         })
                         .catch((error) => {
@@ -136,10 +169,11 @@
         }).then(response => response.json())
             .then(data => {
                 console.log(data);
+                table = data;
             })
-            /*.catch((error) => {
+            .catch((error) => {
                 console.error('Error:', error);
-            });*/
+            });
 
         generarTablero(filas, columnas);
     })  
