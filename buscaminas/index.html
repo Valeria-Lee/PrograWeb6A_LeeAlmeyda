@@ -45,6 +45,14 @@
     </select>
     <div id="tablero"></div>
     <script>
+        let tableData;
+        let bloqIzq = false;
+
+        function cambiarCeldaBloq(celda) {
+            // lo opuesto a su estado actual
+            celda.dataset.bloqueada = !celda.dataset.bloqueada;
+        }
+
         function desbloquearMinas(t) {
             const tableroFinal = t.table
             console.log("data:", tableroFinal)
@@ -67,8 +75,8 @@
                 if (document.querySelector(`#tablero > div:nth-child(${indice})`) != NaN) {
                     const minaCelda = document.querySelector(`#tablero > div:nth-child(${indice})`)
                     if (minaCelda) {
-                        minaCelda.textContent = '💣';
-                        minaCelda.classList.add('revelada');
+                        minaCelda.textContent = '💣'
+                        minaCelda.classList.add('revelada')
                     }
                 }
         });
@@ -91,6 +99,7 @@
                     const columna = j
 
                     celda.addEventListener("click", async (e) => {
+                        if (e.button === 0 && !bloqIzq) {
                         await fetch(window.location.href + 'revelar_celda.php', {
                             method: 'POST',
                             headers: {
@@ -115,13 +124,39 @@
                                 spanNumero.textContent = '💣'
                                 e.target.appendChild(spanNumero)
                                 console.log("explotao'")
-                                desbloquearMinas(table)
+                                desbloquearMinas(tableData)
                             }
                         })
                         .catch((error) => {
                             console.error('Error:', error)
                         })
+                        }
                     }, fila, columna)
+
+                    celda.addEventListener("mousedown", (e) => {
+                        // 2 = el botón derecho
+                        if (e.button === 2) { 
+                            e.preventDefault()
+                            console.log("Clic derecho en:", fila, columna)
+
+                            const indice = fila * tableData.table.length + columna + 1
+                            console.log("indice:", indice)
+
+                            const minaCelda = document.querySelector(`#tablero > div:nth-child(${indice})`)
+                            
+                            console.log("textContent:", minaCelda.textContent)
+
+                            if (minaCelda.textContent === "") {
+                                minaCelda.textContent = '🚩'
+                                cambiarCeldaBloq(minaCelda)
+                            }
+                            else if (minaCelda.textContent === '🚩') {
+                                minaCelda.textContent = ""
+                                cambiarCeldaBloq(minaCelda)
+                            }
+
+                        }
+                    })
 
                     tablero.appendChild(celda)
                 }
@@ -142,22 +177,22 @@
         ]
 
         document.querySelector('#nivel').addEventListener('change', async (e) => {
-        var nivel = document.getElementById("nivel").value;
+        var nivel = document.getElementById("nivel").value
 
         var filas, columnas;
         switch (nivel) {
             case "facil":
-                filas = 8;
-                columnas = 8;
-                break;
+                filas = 8
+                columnas = 8
+                break
             case "medio":
-                filas = 16;
-                columnas = 16;
-                break;
+                filas = 16
+                columnas = 16
+                break
             case "dificil":
-                filas = 30;
-                columnas = 30;
-                break;
+                filas = 30
+                columnas = 30
+                break
         }
 
         await fetch(window.location.href + 'generar_tablero.php', {
@@ -169,7 +204,7 @@
         }).then(response => response.json())
             .then(data => {
                 console.log(data);
-                table = data;
+                tableData = data;
             })
             .catch((error) => {
                 console.error('Error:', error);
