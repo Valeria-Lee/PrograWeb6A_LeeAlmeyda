@@ -19,35 +19,35 @@ class Usuario {
     }
 
     public function setId($id) {
-        $this->$id = $id;
+        $this->id = $id;
     }
 
     public function getId() {
-        return $this->$id;
+        return $this->id;
     }
 
     public function setNombres($nombres) {
-        $this->$nombres = $nombres;
+        $this->nombres = $nombres;
     }
 
     public function getNombres() {
-        return $this->$nombres;
+        return $this->nombres;
     }
 
     public function setApellidos($apellidos) {
-        $this->$apellidos = $apellidos;
+        $this->apellidos = $apellidos;
     }
 
     public function getApellidos() {
-        return $this->$apellidos;
+        return $this->apellidos;
     }
 
     public function setCorreo($correo) {
-        $this->$correo = $correo;
+        $this->correo = $correo;
     }
     
     public function getCorreo() {
-        return $this->$correo;
+        return $this->correo;
     }
 }
 ?>
