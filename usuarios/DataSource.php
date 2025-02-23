@@ -8,7 +8,6 @@ class DataSource {
             # cambiar a datos de conexion de mi bdd
             $this->cadenaParaConexion = "mysql:host=127.0.0.1;dbname=prueba";
             $this->conexion = new PDO($this->cadenaParaConexion, "root", "root");
-            echo "conectado";
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -27,7 +26,6 @@ class DataSource {
     public function ejecutarActualizacion($sql = "", $values = []) {
         if ($sql !== "") {
             $consulta = $this->conexion->prepare($sql);
-            echo $sql;
             $consulta->execute($values);
             return $consulta->rowCount();
         } else {

@@ -33,6 +33,12 @@ class UsuarioDAO implements IDao {
     }
 
     public function insertar(Usuario $usuario) {
+        $correoExistente = $this->buscarIdPorCorreo($usuario->getCorreo());
+
+        if ($correoExistente !== null) {
+            return false;
+        }
+
         $sql = "INSERT INTO usuarios (nombres, apellidos, correo) VALUES (:nombres, :apellidos, :correo )";
         $values = [
             ':nombres' => $usuario->getNombres(),
@@ -43,7 +49,7 @@ class UsuarioDAO implements IDao {
     }
 
     public function actualizar(Usuario $usuario) {
-        $sql = "UPDATE usuarios SET nombres = :nombres, apellidos = :apellidos, correo = :correo WHERE id = :id ;";
+        $sql = "UPDATE usuarios SET nombres = :nombres, apellidos = :apellidos, correo = :correo WHERE id = :id";
         $values = [
             ':nombres' => $usuario->getNombres(),
             ':apellidos' => $usuario->getApellidos(),
@@ -54,11 +60,37 @@ class UsuarioDAO implements IDao {
     }
 
     public function eliminar($id) {
-        $sql = "DELETE FROM usuarios WHERE id = :id ;";
+        $sql = "DELETE FROM usuarios WHERE id = :id";
         $values = [
             ':id' => $id
         ];
         return $this->dataSource->ejecutarActualizacion($sql, $values);
     }
+
+    public function buscarIdPorNombres($nombres) {
+        $sql = "SELECT id FROM usuarios WHERE nombres = :nombres";
+        $values = [':nombres' => $nombres];
+        $data = $this->dataSource->ejecutarConsulta($sql, $values);
+    
+        if (count($data) > 0) {
+            return $data[0]['id'];
+        }
+
+        return null;
+    }
+
+    public function buscarIdPorCorreo($correo) {
+        $sql = "SELECT id FROM usuarios WHERE correo = :correo";
+        $values = [':correo' => $correo];
+        
+        $data = $this->dataSource->ejecutarConsulta($sql, $values);
+    
+        if (count($data) > 0) {
+            return $data[0]['id'];
+        }
+
+        return null;
+    }
+    
 }
 ?>

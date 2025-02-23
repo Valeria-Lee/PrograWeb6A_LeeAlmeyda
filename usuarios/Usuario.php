@@ -18,6 +18,31 @@ class Usuario {
         }
     }
 
+    public function guardar() {
+        $usuarioDAO = new UsuarioDAO();
+        $this->id = $usuarioDAO->insertar($this);
+        return $this->id;
+      }
+
+    public function crear($datos) {
+        $usuario = new Usuario();
+        $usuario->setNombres($datos['nombres']);
+        $usuario->setApellidos($datos['apellidos']);
+        $usuario->setCorreo($datos['correo']);
+        return $usuario->guardar();
+    }
+
+    public function actualizar() {
+        $usuarioDAO = new UsuarioDAO();
+        return $usuarioDAO->actualizar($this);
+    }
+
+    public function eliminar() {
+        $id = $this->getId();
+        $usuarioDAO = new UsuarioDAO();
+        return $usuarioDAO->eliminar($id);
+    }
+
     public function setId($id) {
         $this->id = $id;
     }
